@@ -74,6 +74,7 @@
     <Compile Include="KiwoomCode.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="util\Util.cs" />
     <EmbeddedResource Include="KTradingMain.resx">
       <DependentUpon>KTradingMain.cs</DependentUpon>
     </EmbeddedResource>

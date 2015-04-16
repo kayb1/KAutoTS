@@ -1,5 +1,10 @@
-/xing/obj
-/xing/bin/x86Release/*.exe
-/xing/bin/x86Release/*.config
-/xing/bin/x86Release/*.pdb
-/xing/bin/x86Release/log_files/*.txt
+/KAutoTS/obj
+/KAutoTS/bin/x86Release/*.exe
+/KAutoTS/bin/x86Release/*.config
+/KAutoTS/bin/x86Release/*.pdb
+/KAutoTS/bin/x86Release/log_files/*.txt
+/KAutoTS/obj/Debug/*.exe
+/KAutoTS/bin/Debug/*.pdb
+/KAutoTS/bin/Debug/*.exe
+/KAutoTS/bin/Debug/*.config
+/*.suo

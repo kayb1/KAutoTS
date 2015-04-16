@@ -18,12 +18,12 @@ using System.Windows.Forms;
 using KiwoomCode;
 using System.Net.Json;
 
-namespace KOASampleCS
+namespace KAutoTS
 {
 
     public partial class KTradingMain : Form
     {
-        private string TITLE_NAME = "자동매매프로그램";
+        private string TITLE_NAME = "KAutoTS";
         private string TITLE_VERSION_CODE = "v0.0.1";
 
         private int scrNum = 5000;
@@ -194,7 +194,19 @@ namespace KOASampleCS
             // OPW00004 : 주식실시간잔고
             else if (e.sRQName == "실시간잔고")
             {
-                Logger(Log.조회, "ㅅㄷㄴㅅ " + axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "계좌명").Trim() + " tt: " + axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "예수금").Trim());
+                String sunamt = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "예수금").Trim();
+                String sunamtD2 = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "D+2추정예수금").Trim();
+                String mamt = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "추정예탁자산").Trim();
+                String abp = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "총매입금액").Trim();
+                String dtsunik = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "당일투자손익").Trim();
+                String todayRate = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "당일손익율").Trim();
+
+                Text100.Text = Util.GetNumberFormat(sunamt);
+                TextSunamt1.Text = Util.GetNumberFormat(sunamtD2);
+                TextSunamt.Text = Util.GetNumberFormat(mamt);
+                TextMamt.Text = Util.GetNumberFormat(abp);
+                TextDtsunik.Text = Util.GetNumberFormat(dtsunik);
+                TextRate.Text = Util.GetNumberFormat2(todayRate);
             }
         }
 
@@ -253,8 +265,15 @@ namespace KOASampleCS
 
         private void axKHOpenAPI_OnReceiveMsg(object sender, AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveMsgEvent e)
         {
-            Logger(Log.조회, "===================================================");
-            Logger(Log.조회, "화면번호:{0} | RQName:{1} | TRCode:{2} | 메세지:{3}", e.sScrNo, e.sRQName, e.sTrCode, e.sMsg);
+            if (e.sRQName == "실시간잔고")
+            {
+
+            }
+            else
+            {
+                Logger(Log.조회, "===================================================");
+                Logger(Log.조회, "화면번호:{0} | RQName:{1} | TRCode:{2} | 메세지:{3}", e.sScrNo, e.sRQName, e.sTrCode, e.sMsg);
+            }
         }
 
         private void axKHOpenAPI_OnReceiveRealData(object sender, AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveRealDataEvent e)
@@ -489,14 +508,7 @@ namespace KOASampleCS
         /// <param name="e"></param>
         private void ButtonAutoRealAccountStop_Click_1(object sender, EventArgs e)
         {
-            try
-            {
-                autoTrading(false);
-            }
-            catch (Exception ex)
-            {
-
-            }
+            autoUpdateRealAccount(false);
         }
 
         /// <summary>
@@ -506,21 +518,14 @@ namespace KOASampleCS
         /// <param name="e"></param>
         private void ButtonAutoRealAccountStart_Click_1(object sender, EventArgs e)
         {
-            try
-            {
-                autoTrading(true);
-            }
-            catch (Exception ex)
-            {
-
-            }
+            autoUpdateRealAccount(true);
         }
 
         /// <summary>
         /// 실시간 잔고 시작/중지 지정
         /// </summary>
         /// <param name="flag"></param>
-        public void autoTrading(bool flag)
+        public void autoUpdateRealAccount(bool flag)
         {
             if (flag)
             {
