@@ -203,8 +203,8 @@ namespace KAutoTS
 
                 Text100.Text = Util.GetNumberFormat(sunamt);
                 TextSunamt1.Text = Util.GetNumberFormat(sunamtD2);
-                TextSunamt.Text = Util.GetNumberFormat(mamt);
-                TextMamt.Text = Util.GetNumberFormat(abp);
+                TextMamt.Text = Util.GetNumberFormat(mamt);
+                TextSunamt.Text = Util.GetNumberFormat(abp);
                 TextDtsunik.Text = Util.GetNumberFormat(dtsunik);
                 TextRate.Text = Util.GetNumberFormat2(todayRate);
             }

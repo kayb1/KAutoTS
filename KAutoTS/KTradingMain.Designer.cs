@@ -78,12 +78,10 @@
             this.label12 = new System.Windows.Forms.Label();
             this.Text100 = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
             this.TextSunamt1 = new System.Windows.Forms.TextBox();
-            this.TextSunamt = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
-            this.TextMamt = new System.Windows.Forms.TextBox();
+            this.TextSunamt = new System.Windows.Forms.TextBox();
             this.TextTappamt = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
@@ -96,6 +94,8 @@
             this.ButtonAutoRealAccountStart = new System.Windows.Forms.Button();
             this.GridAccount = new System.Windows.Forms.DataGridView();
             this.timerRealAccount = new System.Windows.Forms.Timer(this.components);
+            this.TextMamt = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axKHOpenAPI)).BeginInit();
@@ -492,10 +492,10 @@
             this.tableLayoutPanel7.Controls.Add(this.label21, 1, 0);
             this.tableLayoutPanel7.Controls.Add(this.label16, 2, 0);
             this.tableLayoutPanel7.Controls.Add(this.TextSunamt1, 1, 1);
-            this.tableLayoutPanel7.Controls.Add(this.TextSunamt, 2, 1);
+            this.tableLayoutPanel7.Controls.Add(this.TextMamt, 2, 1);
             this.tableLayoutPanel7.Controls.Add(this.label18, 3, 0);
             this.tableLayoutPanel7.Controls.Add(this.label19, 4, 0);
-            this.tableLayoutPanel7.Controls.Add(this.TextMamt, 3, 1);
+            this.tableLayoutPanel7.Controls.Add(this.TextSunamt, 3, 1);
             this.tableLayoutPanel7.Controls.Add(this.TextTappamt, 4, 1);
             this.tableLayoutPanel7.Controls.Add(this.label20, 5, 0);
             this.tableLayoutPanel7.Controls.Add(this.label17, 6, 0);
@@ -551,17 +551,6 @@
             this.label21.Text = "예수금-D2";
             this.label21.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
-            // label16
-            // 
-            this.label16.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label16.Location = new System.Drawing.Point(132, 0);
-            this.label16.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(66, 20);
-            this.label16.TabIndex = 33;
-            this.label16.Text = "추정자산";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.BottomRight;
-            // 
             // TextSunamt1
             // 
             this.TextSunamt1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -574,18 +563,6 @@
             this.TextSunamt1.Text = "0";
             this.TextSunamt1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // TextSunamt
-            // 
-            this.TextSunamt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextSunamt.Location = new System.Drawing.Point(132, 22);
-            this.TextSunamt.Margin = new System.Windows.Forms.Padding(0);
-            this.TextSunamt.Name = "TextSunamt";
-            this.TextSunamt.ReadOnly = true;
-            this.TextSunamt.Size = new System.Drawing.Size(66, 21);
-            this.TextSunamt.TabIndex = 34;
-            this.TextSunamt.Text = "0";
-            this.TextSunamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
             // label18
             // 
             this.label18.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -594,7 +571,7 @@
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(66, 20);
             this.label18.TabIndex = 37;
-            this.label18.Text = "총매입금액";
+            this.label18.Text = "추정자산";
             this.label18.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // label19
@@ -608,17 +585,17 @@
             this.label19.Text = "평가금액";
             this.label19.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
-            // TextMamt
+            // TextSunamt
             // 
-            this.TextMamt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextMamt.Location = new System.Drawing.Point(198, 22);
-            this.TextMamt.Margin = new System.Windows.Forms.Padding(0);
-            this.TextMamt.Name = "TextMamt";
-            this.TextMamt.ReadOnly = true;
-            this.TextMamt.Size = new System.Drawing.Size(66, 21);
-            this.TextMamt.TabIndex = 38;
-            this.TextMamt.Text = "0";
-            this.TextMamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TextSunamt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TextSunamt.Location = new System.Drawing.Point(198, 22);
+            this.TextSunamt.Margin = new System.Windows.Forms.Padding(0);
+            this.TextSunamt.Name = "TextSunamt";
+            this.TextSunamt.ReadOnly = true;
+            this.TextSunamt.Size = new System.Drawing.Size(66, 21);
+            this.TextSunamt.TabIndex = 38;
+            this.TextSunamt.Text = "0";
+            this.TextSunamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // TextTappamt
             // 
@@ -790,6 +767,29 @@
             this.timerRealAccount.Interval = 1100;
             this.timerRealAccount.Tick += new System.EventHandler(this.timerRealAccount_tick);
             // 
+            // TextMamt
+            // 
+            this.TextMamt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TextMamt.Location = new System.Drawing.Point(132, 22);
+            this.TextMamt.Margin = new System.Windows.Forms.Padding(0);
+            this.TextMamt.Name = "TextMamt";
+            this.TextMamt.ReadOnly = true;
+            this.TextMamt.Size = new System.Drawing.Size(66, 21);
+            this.TextMamt.TabIndex = 34;
+            this.TextMamt.Text = "0";
+            this.TextMamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label16
+            // 
+            this.label16.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label16.Location = new System.Drawing.Point(132, 0);
+            this.label16.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(66, 20);
+            this.label16.TabIndex = 33;
+            this.label16.Text = "총매입금액";
+            this.label16.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
             // KTradingMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -875,12 +875,10 @@
         public System.Windows.Forms.Label label12;
         public System.Windows.Forms.TextBox Text100;
         public System.Windows.Forms.Label label21;
-        public System.Windows.Forms.Label label16;
         public System.Windows.Forms.TextBox TextSunamt1;
-        public System.Windows.Forms.TextBox TextSunamt;
         public System.Windows.Forms.Label label18;
         public System.Windows.Forms.Label label19;
-        public System.Windows.Forms.TextBox TextMamt;
+        public System.Windows.Forms.TextBox TextSunamt;
         public System.Windows.Forms.TextBox TextTappamt;
         public System.Windows.Forms.Label label20;
         public System.Windows.Forms.Label label17;
@@ -893,6 +891,8 @@
         public System.Windows.Forms.Button ButtonAutoRealAccountStart;
         public System.Windows.Forms.DataGridView GridAccount;
         private System.Windows.Forms.Timer timerRealAccount;
+        public System.Windows.Forms.Label label16;
+        public System.Windows.Forms.TextBox TextMamt;
     }
 }
 
