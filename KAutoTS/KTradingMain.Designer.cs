@@ -30,6 +30,11 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(KTradingMain));
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -39,6 +44,7 @@
             this.기본기능ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.로그인ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.로그아웃ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.설정ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.종료ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.조회기능ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.현재가ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,24 +84,28 @@
             this.label12 = new System.Windows.Forms.Label();
             this.Text100 = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
             this.TextSunamt1 = new System.Windows.Forms.TextBox();
+            this.TextMamt = new System.Windows.Forms.TextBox();
             this.label18 = new System.Windows.Forms.Label();
             this.label19 = new System.Windows.Forms.Label();
             this.TextSunamt = new System.Windows.Forms.TextBox();
-            this.TextTappamt = new System.Windows.Forms.TextBox();
+            this.TextTdtsunik = new System.Windows.Forms.TextBox();
             this.label20 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.TextTdtsunik = new System.Windows.Forms.TextBox();
+            this.TextTdtsunikP = new System.Windows.Forms.TextBox();
             this.TextDtsunik = new System.Windows.Forms.TextBox();
-            this.ButtonAutoRealAccountStop = new System.Windows.Forms.Button();
             this.CheckSellAll = new System.Windows.Forms.CheckBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.TextRate = new System.Windows.Forms.TextBox();
-            this.ButtonAutoRealAccountStart = new System.Windows.Forms.Button();
             this.GridAccount = new System.Windows.Forms.DataGridView();
+            this.ButtonAutoRealAccountStop = new System.Windows.Forms.Button();
+            this.ButtonAutoRealAccountStart = new System.Windows.Forms.Button();
             this.timerRealAccount = new System.Windows.Forms.Timer(this.components);
-            this.TextMamt = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
+            this.timerRealSearch = new System.Windows.Forms.Timer(this.components);
+            this.ButtonAutoRealSearchStop = new System.Windows.Forms.Button();
+            this.ButtonAutoRealSearchStart = new System.Windows.Forms.Button();
+            this.cboRealConditionL = new System.Windows.Forms.ComboBox();
+            this.GridRealCondition = new System.Windows.Forms.DataGridView();
+            this.timerRealCondiInit = new System.Windows.Forms.Timer(this.components);
             this.menuStrip.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axKHOpenAPI)).BeginInit();
@@ -103,6 +113,7 @@
             this.tableLayoutPanel9.SuspendLayout();
             this.tableLayoutPanel7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GridAccount)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GridRealCondition)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -113,7 +124,7 @@
             this.주문기능ToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(964, 24);
+            this.menuStrip.Size = new System.Drawing.Size(1249, 24);
             this.menuStrip.TabIndex = 0;
             this.menuStrip.Text = "menuStrip";
             // 
@@ -122,6 +133,7 @@
             this.기본기능ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.로그인ToolStripMenuItem,
             this.로그아웃ToolStripMenuItem,
+            this.설정ToolStripMenuItem,
             this.종료ToolStripMenuItem});
             this.기본기능ToolStripMenuItem.Name = "기본기능ToolStripMenuItem";
             this.기본기능ToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
@@ -140,6 +152,13 @@
             this.로그아웃ToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
             this.로그아웃ToolStripMenuItem.Text = "로그아웃";
             this.로그아웃ToolStripMenuItem.Click += new System.EventHandler(this.로그아웃ToolStripMenuItem_Click);
+            // 
+            // 설정ToolStripMenuItem
+            // 
+            this.설정ToolStripMenuItem.Name = "설정ToolStripMenuItem";
+            this.설정ToolStripMenuItem.Size = new System.Drawing.Size(122, 22);
+            this.설정ToolStripMenuItem.Text = "설정";
+            this.설정ToolStripMenuItem.Click += new System.EventHandler(this.설정ToolStripMenuItem_Click);
             // 
             // 종료ToolStripMenuItem
             // 
@@ -191,15 +210,15 @@
             this.lst일반.FormattingEnabled = true;
             this.lst일반.HorizontalScrollbar = true;
             this.lst일반.ItemHeight = 12;
-            this.lst일반.Location = new System.Drawing.Point(281, 410);
+            this.lst일반.Location = new System.Drawing.Point(281, 446);
             this.lst일반.Name = "lst일반";
-            this.lst일반.Size = new System.Drawing.Size(267, 124);
+            this.lst일반.Size = new System.Drawing.Size(578, 88);
             this.lst일반.TabIndex = 3;
             // 
             // lbl일반
             // 
             this.lbl일반.AutoSize = true;
-            this.lbl일반.Location = new System.Drawing.Point(279, 395);
+            this.lbl일반.Location = new System.Drawing.Point(279, 431);
             this.lbl일반.Name = "lbl일반";
             this.lbl일반.Size = new System.Drawing.Size(29, 12);
             this.lbl일반.TabIndex = 6;
@@ -443,6 +462,8 @@
             this.axKHOpenAPI.OnReceiveMsg += new AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveMsgEventHandler(this.axKHOpenAPI_OnReceiveMsg);
             this.axKHOpenAPI.OnReceiveChejanData += new AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveChejanDataEventHandler(this.axKHOpenAPI_OnReceiveChejanData);
             this.axKHOpenAPI.OnEventConnect += new AxKHOpenAPILib._DKHOpenAPIEvents_OnEventConnectEventHandler(this.axKHOpenAPI_OnEventConnect);
+            this.axKHOpenAPI.OnReceiveTrCondition += new AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveTrConditionEventHandler(this.axKHOpenAPI_OnReceiveTrCondition);
+            this.axKHOpenAPI.OnReceiveRealCondition += new AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveRealConditionEventHandler(this.axKHOpenAPI_OnReceiveRealCondition);
             // 
             // groupBox5
             // 
@@ -451,7 +472,7 @@
             this.groupBox5.Margin = new System.Windows.Forms.Padding(0);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Padding = new System.Windows.Forms.Padding(3, 0, 3, 3);
-            this.groupBox5.Size = new System.Drawing.Size(674, 334);
+            this.groupBox5.Size = new System.Drawing.Size(578, 227);
             this.groupBox5.TabIndex = 63;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "실시간 계좌 관리 - 실시간 잔고";
@@ -471,12 +492,13 @@
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(668, 317);
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(572, 210);
             this.tableLayoutPanel9.TabIndex = 102;
             // 
             // tableLayoutPanel7
             // 
-            this.tableLayoutPanel7.ColumnCount = 10;
+            this.tableLayoutPanel7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel7.ColumnCount = 9;
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.36781F));
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.36782F));
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.36782F));
@@ -484,9 +506,9 @@
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.36782F));
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.08046F));
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.08046F));
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 52F));
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 40F));
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 113F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 9F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 54F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 132F));
             this.tableLayoutPanel7.Controls.Add(this.label12, 0, 0);
             this.tableLayoutPanel7.Controls.Add(this.Text100, 0, 1);
             this.tableLayoutPanel7.Controls.Add(this.label21, 1, 0);
@@ -496,24 +518,19 @@
             this.tableLayoutPanel7.Controls.Add(this.label18, 3, 0);
             this.tableLayoutPanel7.Controls.Add(this.label19, 4, 0);
             this.tableLayoutPanel7.Controls.Add(this.TextSunamt, 3, 1);
-            this.tableLayoutPanel7.Controls.Add(this.TextTappamt, 4, 1);
+            this.tableLayoutPanel7.Controls.Add(this.TextTdtsunik, 4, 1);
             this.tableLayoutPanel7.Controls.Add(this.label20, 5, 0);
             this.tableLayoutPanel7.Controls.Add(this.label17, 6, 0);
-            this.tableLayoutPanel7.Controls.Add(this.TextTdtsunik, 5, 1);
+            this.tableLayoutPanel7.Controls.Add(this.TextTdtsunikP, 5, 1);
             this.tableLayoutPanel7.Controls.Add(this.TextDtsunik, 6, 1);
-            this.tableLayoutPanel7.Controls.Add(this.ButtonAutoRealAccountStop, 9, 1);
             this.tableLayoutPanel7.Controls.Add(this.CheckSellAll, 8, 0);
-            this.tableLayoutPanel7.Controls.Add(this.label13, 7, 0);
-            this.tableLayoutPanel7.Controls.Add(this.TextRate, 7, 1);
-            this.tableLayoutPanel7.Controls.Add(this.ButtonAutoRealAccountStart, 9, 0);
-            this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel7.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel7.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel7.Name = "tableLayoutPanel7";
             this.tableLayoutPanel7.RowCount = 2;
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(668, 44);
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(572, 44);
             this.tableLayoutPanel7.TabIndex = 101;
             // 
             // label12
@@ -523,7 +540,7 @@
             this.label12.Location = new System.Drawing.Point(0, 0);
             this.label12.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(66, 20);
+            this.label12.Size = new System.Drawing.Size(73, 20);
             this.label12.TabIndex = 109;
             this.label12.Text = "주문가능";
             this.label12.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -535,7 +552,7 @@
             this.Text100.Margin = new System.Windows.Forms.Padding(0);
             this.Text100.Name = "Text100";
             this.Text100.ReadOnly = true;
-            this.Text100.Size = new System.Drawing.Size(66, 21);
+            this.Text100.Size = new System.Drawing.Size(73, 21);
             this.Text100.TabIndex = 112;
             this.Text100.Text = "0";
             this.Text100.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -543,136 +560,147 @@
             // label21
             // 
             this.label21.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label21.Location = new System.Drawing.Point(66, 0);
+            this.label21.Location = new System.Drawing.Point(73, 0);
             this.label21.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(66, 20);
+            this.label21.Size = new System.Drawing.Size(73, 20);
             this.label21.TabIndex = 43;
             this.label21.Text = "예수금-D2";
             this.label21.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
+            // label16
+            // 
+            this.label16.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label16.Location = new System.Drawing.Point(146, 0);
+            this.label16.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(73, 20);
+            this.label16.TabIndex = 33;
+            this.label16.Text = "총매입";
+            this.label16.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            // 
             // TextSunamt1
             // 
             this.TextSunamt1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextSunamt1.Location = new System.Drawing.Point(66, 22);
+            this.TextSunamt1.Location = new System.Drawing.Point(73, 22);
             this.TextSunamt1.Margin = new System.Windows.Forms.Padding(0);
             this.TextSunamt1.Name = "TextSunamt1";
             this.TextSunamt1.ReadOnly = true;
-            this.TextSunamt1.Size = new System.Drawing.Size(66, 21);
+            this.TextSunamt1.Size = new System.Drawing.Size(73, 21);
             this.TextSunamt1.TabIndex = 44;
             this.TextSunamt1.Text = "0";
             this.TextSunamt1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
+            // TextMamt
+            // 
+            this.TextMamt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TextMamt.Location = new System.Drawing.Point(146, 22);
+            this.TextMamt.Margin = new System.Windows.Forms.Padding(0);
+            this.TextMamt.Name = "TextMamt";
+            this.TextMamt.ReadOnly = true;
+            this.TextMamt.Size = new System.Drawing.Size(73, 21);
+            this.TextMamt.TabIndex = 34;
+            this.TextMamt.Text = "0";
+            this.TextMamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // label18
             // 
             this.label18.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label18.Location = new System.Drawing.Point(198, 0);
+            this.label18.Location = new System.Drawing.Point(219, 0);
             this.label18.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(66, 20);
+            this.label18.Size = new System.Drawing.Size(73, 20);
             this.label18.TabIndex = 37;
-            this.label18.Text = "추정자산";
+            this.label18.Text = "총평가";
             this.label18.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // label19
             // 
             this.label19.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label19.Location = new System.Drawing.Point(264, 0);
+            this.label19.Location = new System.Drawing.Point(292, 0);
             this.label19.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(66, 20);
+            this.label19.Size = new System.Drawing.Size(73, 20);
             this.label19.TabIndex = 39;
-            this.label19.Text = "평가금액";
+            this.label19.Text = "총손익";
             this.label19.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // TextSunamt
             // 
             this.TextSunamt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextSunamt.Location = new System.Drawing.Point(198, 22);
+            this.TextSunamt.Location = new System.Drawing.Point(219, 22);
             this.TextSunamt.Margin = new System.Windows.Forms.Padding(0);
             this.TextSunamt.Name = "TextSunamt";
             this.TextSunamt.ReadOnly = true;
-            this.TextSunamt.Size = new System.Drawing.Size(66, 21);
+            this.TextSunamt.Size = new System.Drawing.Size(73, 21);
             this.TextSunamt.TabIndex = 38;
             this.TextSunamt.Text = "0";
             this.TextSunamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // TextTappamt
+            // TextTdtsunik
             // 
-            this.TextTappamt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextTappamt.Location = new System.Drawing.Point(264, 22);
-            this.TextTappamt.Margin = new System.Windows.Forms.Padding(0);
-            this.TextTappamt.Name = "TextTappamt";
-            this.TextTappamt.ReadOnly = true;
-            this.TextTappamt.Size = new System.Drawing.Size(66, 21);
-            this.TextTappamt.TabIndex = 40;
-            this.TextTappamt.Text = "0";
-            this.TextTappamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TextTdtsunik.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TextTdtsunik.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.TextTdtsunik.Location = new System.Drawing.Point(292, 22);
+            this.TextTdtsunik.Margin = new System.Windows.Forms.Padding(0);
+            this.TextTdtsunik.Name = "TextTdtsunik";
+            this.TextTdtsunik.ReadOnly = true;
+            this.TextTdtsunik.Size = new System.Drawing.Size(73, 21);
+            this.TextTdtsunik.TabIndex = 40;
+            this.TextTdtsunik.Text = "0";
+            this.TextTdtsunik.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label20
             // 
             this.label20.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label20.Location = new System.Drawing.Point(330, 0);
+            this.label20.Location = new System.Drawing.Point(365, 0);
             this.label20.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(65, 20);
+            this.label20.Size = new System.Drawing.Size(71, 20);
             this.label20.TabIndex = 41;
-            this.label20.Text = "평가손익";
+            this.label20.Text = "총수익률";
             this.label20.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // label17
             // 
             this.label17.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label17.Location = new System.Drawing.Point(395, 0);
+            this.label17.Location = new System.Drawing.Point(436, 0);
             this.label17.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(65, 20);
+            this.label17.Size = new System.Drawing.Size(71, 20);
             this.label17.TabIndex = 35;
             this.label17.Text = "실현손익";
             this.label17.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
-            // TextTdtsunik
+            // TextTdtsunikP
             // 
-            this.TextTdtsunik.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextTdtsunik.Location = new System.Drawing.Point(330, 22);
-            this.TextTdtsunik.Margin = new System.Windows.Forms.Padding(0);
-            this.TextTdtsunik.Name = "TextTdtsunik";
-            this.TextTdtsunik.ReadOnly = true;
-            this.TextTdtsunik.Size = new System.Drawing.Size(65, 21);
-            this.TextTdtsunik.TabIndex = 42;
-            this.TextTdtsunik.Text = "0";
-            this.TextTdtsunik.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TextTdtsunikP.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TextTdtsunikP.Location = new System.Drawing.Point(365, 22);
+            this.TextTdtsunikP.Margin = new System.Windows.Forms.Padding(0);
+            this.TextTdtsunikP.Name = "TextTdtsunikP";
+            this.TextTdtsunikP.ReadOnly = true;
+            this.TextTdtsunikP.Size = new System.Drawing.Size(71, 21);
+            this.TextTdtsunikP.TabIndex = 42;
+            this.TextTdtsunikP.Text = "0";
+            this.TextTdtsunikP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // TextDtsunik
             // 
             this.TextDtsunik.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextDtsunik.Location = new System.Drawing.Point(395, 22);
+            this.TextDtsunik.Location = new System.Drawing.Point(436, 22);
             this.TextDtsunik.Margin = new System.Windows.Forms.Padding(0);
             this.TextDtsunik.Name = "TextDtsunik";
             this.TextDtsunik.ReadOnly = true;
-            this.TextDtsunik.Size = new System.Drawing.Size(65, 21);
+            this.TextDtsunik.Size = new System.Drawing.Size(71, 21);
             this.TextDtsunik.TabIndex = 36;
             this.TextDtsunik.Text = "0";
             this.TextDtsunik.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // ButtonAutoRealAccountStop
-            // 
-            this.ButtonAutoRealAccountStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonAutoRealAccountStop.Enabled = false;
-            this.ButtonAutoRealAccountStop.Location = new System.Drawing.Point(576, 22);
-            this.ButtonAutoRealAccountStop.Margin = new System.Windows.Forms.Padding(0);
-            this.ButtonAutoRealAccountStop.Name = "ButtonAutoRealAccountStop";
-            this.ButtonAutoRealAccountStop.Size = new System.Drawing.Size(92, 20);
-            this.ButtonAutoRealAccountStop.TabIndex = 53;
-            this.ButtonAutoRealAccountStop.Text = "실.잔고Stop";
-            this.ButtonAutoRealAccountStop.UseVisualStyleBackColor = true;
-            this.ButtonAutoRealAccountStop.Click += new System.EventHandler(this.ButtonAutoRealAccountStop_Click_1);
             // 
             // CheckSellAll
             // 
             this.CheckSellAll.AutoSize = true;
             this.CheckSellAll.CheckAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.CheckSellAll.Location = new System.Drawing.Point(512, 0);
+            this.CheckSellAll.Location = new System.Drawing.Point(516, 0);
             this.CheckSellAll.Margin = new System.Windows.Forms.Padding(0);
             this.CheckSellAll.Name = "CheckSellAll";
             this.tableLayoutPanel7.SetRowSpan(this.CheckSellAll, 2);
@@ -682,33 +710,67 @@
             this.CheckSellAll.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.CheckSellAll.UseVisualStyleBackColor = true;
             // 
-            // label13
+            // GridAccount
             // 
-            this.label13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label13.Location = new System.Drawing.Point(460, 0);
-            this.label13.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(52, 20);
-            this.label13.TabIndex = 113;
-            this.label13.Text = "손익율";
-            this.label13.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.GridAccount.AllowUserToAddRows = false;
+            this.GridAccount.AllowUserToDeleteRows = false;
+            this.GridAccount.AllowUserToResizeColumns = false;
+            this.GridAccount.AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.NullValue = null;
+            this.GridAccount.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            this.GridAccount.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.GridAccount.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.NullValue = null;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.GridAccount.DefaultCellStyle = dataGridViewCellStyle3;
+            this.GridAccount.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GridAccount.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.GridAccount.Location = new System.Drawing.Point(0, 44);
+            this.GridAccount.Margin = new System.Windows.Forms.Padding(0);
+            this.GridAccount.MultiSelect = false;
+            this.GridAccount.Name = "GridAccount";
+            this.GridAccount.ReadOnly = true;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            this.GridAccount.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            this.GridAccount.RowHeadersVisible = false;
+            this.GridAccount.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
+            dataGridViewCellStyle5.NullValue = null;
+            this.GridAccount.RowsDefaultCellStyle = dataGridViewCellStyle5;
+            this.GridAccount.RowTemplate.Height = 23;
+            this.GridAccount.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.GridAccount.Size = new System.Drawing.Size(572, 166);
+            this.GridAccount.TabIndex = 32;
             // 
-            // TextRate
+            // ButtonAutoRealAccountStop
             // 
-            this.TextRate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextRate.Location = new System.Drawing.Point(460, 22);
-            this.TextRate.Margin = new System.Windows.Forms.Padding(0);
-            this.TextRate.Name = "TextRate";
-            this.TextRate.ReadOnly = true;
-            this.TextRate.Size = new System.Drawing.Size(52, 21);
-            this.TextRate.TabIndex = 114;
-            this.TextRate.Text = "0";
-            this.TextRate.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.ButtonAutoRealAccountStop.Enabled = false;
+            this.ButtonAutoRealAccountStop.Location = new System.Drawing.Point(378, 24);
+            this.ButtonAutoRealAccountStop.Margin = new System.Windows.Forms.Padding(0);
+            this.ButtonAutoRealAccountStop.Name = "ButtonAutoRealAccountStop";
+            this.ButtonAutoRealAccountStop.Size = new System.Drawing.Size(92, 20);
+            this.ButtonAutoRealAccountStop.TabIndex = 53;
+            this.ButtonAutoRealAccountStop.Text = "실.잔고Stop";
+            this.ButtonAutoRealAccountStop.UseVisualStyleBackColor = true;
+            this.ButtonAutoRealAccountStop.Click += new System.EventHandler(this.ButtonAutoRealAccountStop_Click_1);
             // 
             // ButtonAutoRealAccountStart
             // 
-            this.ButtonAutoRealAccountStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ButtonAutoRealAccountStart.Location = new System.Drawing.Point(576, 0);
+            this.ButtonAutoRealAccountStart.Location = new System.Drawing.Point(286, 24);
             this.ButtonAutoRealAccountStart.Margin = new System.Windows.Forms.Padding(0);
             this.ButtonAutoRealAccountStart.Name = "ButtonAutoRealAccountStart";
             this.ButtonAutoRealAccountStart.Size = new System.Drawing.Size(92, 20);
@@ -717,21 +779,64 @@
             this.ButtonAutoRealAccountStart.UseVisualStyleBackColor = true;
             this.ButtonAutoRealAccountStart.Click += new System.EventHandler(this.ButtonAutoRealAccountStart_Click_1);
             // 
-            // GridAccount
+            // timerRealAccount
             // 
-            this.GridAccount.AllowUserToAddRows = false;
-            this.GridAccount.AllowUserToDeleteRows = false;
-            this.GridAccount.AllowUserToResizeColumns = false;
-            this.GridAccount.AllowUserToResizeRows = false;
+            this.timerRealAccount.Interval = 500;
+            this.timerRealAccount.Tick += new System.EventHandler(this.timerRealAccount_tick);
+            // 
+            // timerRealSearch
+            // 
+            this.timerRealSearch.Interval = 1000;
+            this.timerRealSearch.Tick += new System.EventHandler(this.timerRealSearch_Tick);
+            // 
+            // ButtonAutoRealSearchStop
+            // 
+            this.ButtonAutoRealSearchStop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonAutoRealSearchStop.Enabled = false;
+            this.ButtonAutoRealSearchStop.Location = new System.Drawing.Point(870, 85);
+            this.ButtonAutoRealSearchStop.Margin = new System.Windows.Forms.Padding(0);
+            this.ButtonAutoRealSearchStop.Name = "ButtonAutoRealSearchStop";
+            this.ButtonAutoRealSearchStop.Size = new System.Drawing.Size(92, 20);
+            this.ButtonAutoRealSearchStop.TabIndex = 64;
+            this.ButtonAutoRealSearchStop.Text = "실.검색Stop";
+            this.ButtonAutoRealSearchStop.UseVisualStyleBackColor = true;
+            this.ButtonAutoRealSearchStop.Click += new System.EventHandler(this.ButtonAutoRealSearchStop_Click);
+            // 
+            // ButtonAutoRealSearchStart
+            // 
+            this.ButtonAutoRealSearchStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ButtonAutoRealSearchStart.Location = new System.Drawing.Point(870, 61);
+            this.ButtonAutoRealSearchStart.Margin = new System.Windows.Forms.Padding(0);
+            this.ButtonAutoRealSearchStart.Name = "ButtonAutoRealSearchStart";
+            this.ButtonAutoRealSearchStart.Size = new System.Drawing.Size(92, 20);
+            this.ButtonAutoRealSearchStart.TabIndex = 65;
+            this.ButtonAutoRealSearchStart.Text = "실.검색Start";
+            this.ButtonAutoRealSearchStart.UseVisualStyleBackColor = true;
+            this.ButtonAutoRealSearchStart.Click += new System.EventHandler(this.ButtonAutoRealSearchStart_Click);
+            // 
+            // cboRealConditionL
+            // 
+            this.cboRealConditionL.FormattingEnabled = true;
+            this.cboRealConditionL.Location = new System.Drawing.Point(965, 61);
+            this.cboRealConditionL.Name = "cboRealConditionL";
+            this.cboRealConditionL.Size = new System.Drawing.Size(121, 20);
+            this.cboRealConditionL.TabIndex = 66;
+            // 
+            // GridRealCondition
+            // 
+            this.GridRealCondition.AllowUserToAddRows = false;
+            this.GridRealCondition.AllowUserToDeleteRows = false;
+            this.GridRealCondition.AllowUserToResizeColumns = false;
+            this.GridRealCondition.AllowUserToResizeRows = false;
             dataGridViewCellStyle6.NullValue = null;
-            this.GridAccount.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
+            this.GridRealCondition.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle6;
             dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle7.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            this.GridAccount.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
-            this.GridAccount.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.GridRealCondition.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            this.GridRealCondition.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle8.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
@@ -740,61 +845,42 @@
             dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.GridAccount.DefaultCellStyle = dataGridViewCellStyle8;
-            this.GridAccount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GridAccount.Location = new System.Drawing.Point(0, 44);
-            this.GridAccount.Margin = new System.Windows.Forms.Padding(0);
-            this.GridAccount.MultiSelect = false;
-            this.GridAccount.Name = "GridAccount";
-            this.GridAccount.ReadOnly = true;
+            this.GridRealCondition.DefaultCellStyle = dataGridViewCellStyle8;
+            this.GridRealCondition.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.GridRealCondition.Location = new System.Drawing.Point(870, 105);
+            this.GridRealCondition.Margin = new System.Windows.Forms.Padding(0);
+            this.GridRealCondition.MultiSelect = false;
+            this.GridRealCondition.Name = "GridRealCondition";
+            this.GridRealCondition.ReadOnly = true;
             dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle9.Font = new System.Drawing.Font("굴림", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            this.GridAccount.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
-            this.GridAccount.RowHeadersVisible = false;
-            this.GridAccount.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.GridRealCondition.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            this.GridRealCondition.RowHeadersVisible = false;
+            this.GridRealCondition.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
             dataGridViewCellStyle10.NullValue = null;
-            this.GridAccount.RowsDefaultCellStyle = dataGridViewCellStyle10;
-            this.GridAccount.RowTemplate.Height = 23;
-            this.GridAccount.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.GridAccount.Size = new System.Drawing.Size(668, 273);
-            this.GridAccount.TabIndex = 32;
+            this.GridRealCondition.RowsDefaultCellStyle = dataGridViewCellStyle10;
+            this.GridRealCondition.RowTemplate.Height = 23;
+            this.GridRealCondition.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.GridRealCondition.Size = new System.Drawing.Size(370, 166);
+            this.GridRealCondition.TabIndex = 67;
             // 
-            // timerRealAccount
+            // timerRealCondiInit
             // 
-            this.timerRealAccount.Interval = 1100;
-            this.timerRealAccount.Tick += new System.EventHandler(this.timerRealAccount_tick);
-            // 
-            // TextMamt
-            // 
-            this.TextMamt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextMamt.Location = new System.Drawing.Point(132, 22);
-            this.TextMamt.Margin = new System.Windows.Forms.Padding(0);
-            this.TextMamt.Name = "TextMamt";
-            this.TextMamt.ReadOnly = true;
-            this.TextMamt.Size = new System.Drawing.Size(66, 21);
-            this.TextMamt.TabIndex = 34;
-            this.TextMamt.Text = "0";
-            this.TextMamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label16
-            // 
-            this.label16.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label16.Location = new System.Drawing.Point(132, 0);
-            this.label16.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(66, 20);
-            this.label16.TabIndex = 33;
-            this.label16.Text = "총매입금액";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.BottomRight;
+            this.timerRealCondiInit.Interval = 500;
+            this.timerRealCondiInit.Tick += new System.EventHandler(this.timerRealCondiInit_Tick);
             // 
             // KTradingMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(964, 550);
+            this.ClientSize = new System.Drawing.Size(1249, 550);
+            this.Controls.Add(this.GridRealCondition);
+            this.Controls.Add(this.cboRealConditionL);
+            this.Controls.Add(this.ButtonAutoRealSearchStop);
+            this.Controls.Add(this.ButtonAutoRealSearchStart);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.txt조회날짜);
@@ -806,8 +892,10 @@
             this.Controls.Add(this.lbl아이디);
             this.Controls.Add(this.lbl이름);
             this.Controls.Add(this.label2);
+            this.Controls.Add(this.ButtonAutoRealAccountStop);
             this.Controls.Add(this.Label1);
             this.Controls.Add(this.axKHOpenAPI);
+            this.Controls.Add(this.ButtonAutoRealAccountStart);
             this.Controls.Add(this.lbl일반);
             this.Controls.Add(this.lst일반);
             this.Controls.Add(this.menuStrip);
@@ -825,6 +913,7 @@
             this.tableLayoutPanel7.ResumeLayout(false);
             this.tableLayoutPanel7.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.GridAccount)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.GridRealCondition)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -879,20 +968,25 @@
         public System.Windows.Forms.Label label18;
         public System.Windows.Forms.Label label19;
         public System.Windows.Forms.TextBox TextSunamt;
-        public System.Windows.Forms.TextBox TextTappamt;
         public System.Windows.Forms.Label label20;
         public System.Windows.Forms.Label label17;
-        public System.Windows.Forms.TextBox TextTdtsunik;
+        public System.Windows.Forms.TextBox TextTdtsunikP;
         public System.Windows.Forms.TextBox TextDtsunik;
         public System.Windows.Forms.Button ButtonAutoRealAccountStop;
         public System.Windows.Forms.CheckBox CheckSellAll;
-        public System.Windows.Forms.Label label13;
-        public System.Windows.Forms.TextBox TextRate;
         public System.Windows.Forms.Button ButtonAutoRealAccountStart;
         public System.Windows.Forms.DataGridView GridAccount;
         private System.Windows.Forms.Timer timerRealAccount;
         public System.Windows.Forms.Label label16;
         public System.Windows.Forms.TextBox TextMamt;
+        public System.Windows.Forms.TextBox TextTdtsunik;
+        private System.Windows.Forms.Timer timerRealSearch;
+        private System.Windows.Forms.ToolStripMenuItem 설정ToolStripMenuItem;
+        public System.Windows.Forms.Button ButtonAutoRealSearchStop;
+        public System.Windows.Forms.Button ButtonAutoRealSearchStart;
+        private System.Windows.Forms.ComboBox cboRealConditionL;
+        public System.Windows.Forms.DataGridView GridRealCondition;
+        private System.Windows.Forms.Timer timerRealCondiInit;
     }
 }
 

@@ -34,12 +34,23 @@ namespace KAutoTS
         /// <summary>주식잔고 그리드 헤더 json</summary>
         public JsonObjectCollection mhAccount;
 
+        /// <summary>매도시 활용 {"종목코드":"고가|최고수익율"}</summary>
+        public JsonObjectCollection mAccountJson;
+
+        /// <summary>당일 같은 종목 재매수 세팅시 활용 {"종목코드"}</summary>
+        public JsonObjectCollection mRebuyJson;
+
+        private FormSetting mfSetting;
+
         public KTradingMain()
         {
             InitializeComponent();
 
             // 그리드 초기화
             initGridTitle();
+
+            로그인ToolStripMenuItem.Enabled = true;
+            로그아웃ToolStripMenuItem.Enabled = false;
 
             if (axKHOpenAPI.CommConnect() == 0)
             {
@@ -51,6 +62,49 @@ namespace KAutoTS
             }
 
             Text = TITLE_NAME + " " + TITLE_VERSION_CODE + " - 미연결";
+
+            #region 필요한 JSON 로딩
+
+            string date_saved = Properties.Settings.Default.LAST_DATE;
+            string date_now = util_datetime.GetFormatNow("yyyyMMdd");
+
+            // 오늘 프로그램이 실행된적이 있다면...
+            if (date_now == date_saved)
+            {
+                // 설정파일에 저장된 값을 로딩				
+                try
+                {
+                    mAccountJson = (JsonObjectCollection)new JsonTextParser().Parse(Properties.Settings.Default.ACCOUNT_JSON);
+                    mRebuyJson = (JsonObjectCollection)new JsonTextParser().Parse(Properties.Settings.Default.REBUY_JSON);
+                }
+                // 설정 파일에 잘못된 json 값이 들어가 있을 경우 예외 처리
+                catch (Exception ex)
+                {
+                    // json 초기화
+                    mAccountJson = new JsonObjectCollection();
+                    mRebuyJson = new JsonObjectCollection();
+
+                    Logger(Log.에러, "KTradingMain json 초기화 :: " + ex.Message);
+                }
+            }
+            // 오늘 처음 실행되는 것이라면..
+            else
+            {
+                // json 초기화
+                mAccountJson = new JsonObjectCollection();
+                mRebuyJson = new JsonObjectCollection();
+
+                // 설정파일에 금일 날짜값 저장
+                Properties.Settings.Default.LAST_DATE = date_now;
+                Properties.Settings.Default.Save();
+            }
+
+            mfSetting = new FormSetting();
+
+            ButtonAutoRealSearchStart.Enabled = false;
+            ButtonAutoRealSearchStop.Enabled = false;
+
+            #endregion
         }
 
         /// <summary>
@@ -59,7 +113,7 @@ namespace KAutoTS
         private void initGridTitle()
         {
             // 실시간 잔고 그리드
-            string[] aAccountTitle = { "종목코드", "종목명", "수량", "현재가", "등락율", "평균단가", "수익율", "평가손익", "체결강도", "거래량", "거래대금", "평가금액"};
+            string[] aAccountTitle = { "종목번호", "종목명", "평가손익", "수익률", "매입가", "보유수량", "현재가", "매입금액", "평가금액" };
 
             mhAccount = new JsonObjectCollection();
             GridAccount.ColumnCount = aAccountTitle.Length;
@@ -71,23 +125,60 @@ namespace KAutoTS
                 GridAccount.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
                 GridAccount.Columns[i].Name = aAccountTitle[i];
-                GridAccount.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                //GridAccount.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                GridAccount.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
                 GridAccount.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+                GridAccount.Columns[i].Width = GridAccount.Width / aAccountTitle.Length;
 
-                if (aAccountTitle[i] == "종목코드" || aAccountTitle[i] == "종목명")
+                if (aAccountTitle[i] == "종목번호" || aAccountTitle[i] == "종목명")
                 {
+                    GridAccount.Columns[i].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
                     GridAccount.Columns[i].Frozen = true;
                 }
                 else
                 {
-                    if (aAccountTitle[i] == "수익율")
+                    GridAccount.Columns[i].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    if (aAccountTitle[i] == "수익률")
                     {
-                        GridAccount.Columns[i].DefaultCellStyle.Font = new System.Drawing.Font(GridAccount.Font, System.Drawing.FontStyle.Bold);
+                        //GridAccount.Columns[i].DefaultCellStyle.Font = new System.Drawing.Font(GridAccount.Font, System.Drawing.FontStyle.Bold);
                     }
                 }
             }
 
             GridAccount.SelectionMode = DataGridViewSelectionMode.FullRowSelect;		// 행단위 선택
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            // 실시간 조건검색 그리드
+            string[] aAccountRealCondition = { "종목번호", "종목명", "현재가", "현.등락률", "검색가", "검.등락률"};
+
+            GridRealCondition.ColumnCount = aAccountRealCondition.Length;
+
+            for (int i = 0; i < aAccountRealCondition.Length; i++)
+            {
+                GridRealCondition.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+                GridRealCondition.Columns[i].Name = aAccountRealCondition[i];
+                GridRealCondition.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                GridRealCondition.Columns[i].SortMode = DataGridViewColumnSortMode.NotSortable;
+                GridRealCondition.Columns[i].Width = GridRealCondition.Width / aAccountRealCondition.Length;
+
+                if (aAccountTitle[i] == "종목번호" || aAccountTitle[i] == "종목명")
+                {
+                    GridRealCondition.Columns[i].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+                    GridRealCondition.Columns[i].Frozen = true;
+                }
+                else
+                {
+                    GridRealCondition.Columns[i].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    if (aAccountTitle[i] == "수익률")
+                    {
+                        //GridRealCondition.Columns[i].DefaultCellStyle.Font = new System.Drawing.Font(GridRealCondition.Font, System.Drawing.FontStyle.Bold);
+                    }
+                }
+            }
+
+            GridRealCondition.SelectionMode = DataGridViewSelectionMode.FullRowSelect;		// 행단위 선택
         }
 
         // 로그를 출력합니다.
@@ -140,6 +231,9 @@ namespace KAutoTS
         // 로그아웃
         private void 로그아웃ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            로그인ToolStripMenuItem.Enabled = true;
+            로그아웃ToolStripMenuItem.Enabled = false;
+
             DisconnectAllRealData();
             axKHOpenAPI.CommTerminate();
             Logger(Log.일반, "로그아웃");
@@ -196,17 +290,314 @@ namespace KAutoTS
             {
                 String sunamt = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "예수금").Trim();
                 String sunamtD2 = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "D+2추정예수금").Trim();
-                String mamt = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "추정예탁자산").Trim();
-                String abp = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "총매입금액").Trim();
-                String dtsunik = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "당일투자손익").Trim();
-                String todayRate = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "당일손익율").Trim();
 
                 Text100.Text = Util.GetNumberFormat(sunamt);
                 TextSunamt1.Text = Util.GetNumberFormat(sunamtD2);
+            }
+            // OPW00018 : 계좌평가잔고
+            else if (e.sRQName == "계좌잔고평가")
+            {
+                String mamt = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "총매입금액").Trim();
+                String abp = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "총평가금액").Trim();
+                String todayDtsunik = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "총평가손익금액").Trim();
+                String todayRate = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "총수익률(%)").Trim();
+
                 TextMamt.Text = Util.GetNumberFormat(mamt);
                 TextSunamt.Text = Util.GetNumberFormat(abp);
-                TextDtsunik.Text = Util.GetNumberFormat(dtsunik);
-                TextRate.Text = Util.GetNumberFormat2(todayRate);
+                TextTdtsunik.Text = Util.GetNumberFormat(todayDtsunik);
+                TextTdtsunikP.Text = Util.GetNumberFormat2(todayRate);
+
+                // 그리드 초기화
+                GridAccount.Rows.Clear();
+
+                int nCnt = axKHOpenAPI.GetRepeatCnt(e.sTrCode, e.sRQName);
+
+                if (nCnt > 0)
+                {
+                    // 잔고 그리드 초기화
+                    for (int iRow = 0; iRow < GridAccount.Rows.Count; iRow++)
+                    {
+                        // 비교용으로 사용할 row header 값 초기화
+                        GridAccount.Rows[iRow].HeaderCell.Value = "";
+
+                        // 배경색 초기화
+                        GridAccount.Rows[iRow].DefaultCellStyle.BackColor = System.Drawing.Color.White;
+                    }
+                }
+
+                for (int i = 0; i < nCnt; i++)
+                {
+                    string[] row = new string[GridAccount.ColumnCount];
+
+                    for (int j = 0; j < row.Length; j++)
+                    {
+                        row[j] = "0";
+                    }
+
+                    string shcode = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "종목번호").Trim();
+                    string dtsunik = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "평가손익").Trim();
+                    string squantity = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "보유수량").Trim();
+
+                    #region 0424 당일 재매수 종목 json 데이터 처리
+                    // json에 저장된 잔고 종목 정보 가져 옴
+                    JsonObject jsonRebuy0424 = mRebuyJson[shcode];
+
+                    // json에 잔고 종목 정보가 없으면 추가
+                    if (jsonRebuy0424 == null)
+                    {
+                        mRebuyJson.Add(new JsonStringValue(shcode));
+                    }
+                    #endregion
+
+                    // 잔고정보 그리드에 종목정보가 이미 있다면 현재값 기준으로 수정
+					/*bool flagModify = false;
+					
+					int iRowGrid = GridAccount.Rows.Count;
+
+                    for (int iRow = 0; iRow < iRowGrid; iRow++)
+                    {
+                        // 그리드에서 해당 종목을 찾아서..
+                        if (shcode == GridAccount.Rows[iRow].Cells[0].Value.ToString())
+                        {
+                            #region 매도주문
+
+                            double quantity = Convert.ToDouble(squantity);
+                            // 매도가능 수량이 있다면 설정값에 따른 매도 진행
+                            if (quantity > 0)
+                            {
+                                // 일괄매도 체크되어 있으면 보유종목 전량 매도
+                                if (CheckSellAll.Checked)
+                                {
+                                    setting.mxTrCSPAT00600.call_request(shcode, quantity.ToString(), price.ToString(), "1", "[매도] 일괄 :: " + rate.ToString(), hname);
+                                }
+
+                                // 보유종목 당일 청산
+                                if (setting.sell_today_yn)
+                                {
+                                    // 장중
+                                    if (setting.mxRealJif.mjstatus == "21" && setting.mxTr0167.mTimeCur >= 144900)
+                                    {
+                                        setting.mxTrCSPAT00600.call_request(shcode, quantity.ToString(), price.ToString(), "1", "[매도] 당일청산 :: " + rate.ToString(), hname);
+                                    }
+                                    // 장 마감 동시호가
+                                    else if (setting.mxRealJif.mjstatus == "42")
+                                    {
+                                        double dnlmt_grid = Convert.ToDouble(mfTrading.GridAccount.Rows[iRow].Cells[Convert.ToInt32(mfTrading.mhAccount["하한가"].GetValue())].Value);
+                                        setting.mxTrCSPAT00600.call_request(shcode, quantity.ToString(), dnlmt_grid.ToString(), "1", "[매도] 당일청산 :: " + rate.ToString(), hname);
+                                    }
+                                }
+
+                                // 손실제한 사용
+                                if (setting.sell_min_yn)
+                                {
+                                    // 수익율이 손실제한 설정값보다 작다면 매도
+                                    if (rate < -setting.sell_min_rate)
+                                    {
+                                        setting.mxTrCSPAT00600.call_request(shcode, quantity.ToString(), price.ToString(), "1", "[매도] 손절 :: " + rate.ToString(), hname);
+                                    }
+                                }
+
+                                // 목표 수익율 달성시 매도 사용
+                                if (setting.sell_max_yn)
+                                {
+                                    // 최고 수익율이 목표 수익율을 넘겼다면..
+                                    if (json_rate_high > setting.sell_max_rate)
+                                    {
+                                        // 목표 수익율 도달 후 버퍼값 만큼 하락시 매도
+                                        if ((rate + 100) < (json_rate_high + 100 - setting.sell_max_buffer))
+                                        {
+                                            setting.mxTrCSPAT00600.call_request(shcode, quantity.ToString(), price.ToString(), "1", "[매도] 목표 :: " + rate.ToString(), hname);
+                                        }
+                                    }
+                                }
+
+                                // 고정진폭 매도
+                                if (setting.sell_fix_yn)
+                                {
+                                    // 현재 수익율 < 최고 수익율 - 버퍼
+                                    if ((rate + 100) < (json_rate_high + 100 - setting.sell_fix_buffer))
+                                    {
+                                        setting.mxTrCSPAT00600.call_request(shcode, quantity.ToString(), price.ToString(), "1", "[매도] 고정 :: " + rate.ToString(), hname);
+                                    }
+                                }
+
+                                // 절반 매도 사용
+                                if (setting.sell_half_yn)
+                                {
+                                    // 최고 수익율이 목표 수익율을 넘겼다면..
+                                    if (json_rate_high > setting.sell_half)
+                                    {
+                                        // 최고 수익율 대비 절반만큼 하락시 매도
+                                        if (rate <= (json_rate_high - (json_rate_high / 2)))
+                                        {
+                                            setting.mxTrCSPAT00600.call_request(shcode, quantity.ToString(), price.ToString(), "1", "[매도] 절반 :: " + rate.ToString(), hname);
+                                        }
+                                    }
+                                }
+
+                                // 상한가 이탈 종목 잡기
+                                if (setting.sell_uplmt_yn)
+                                {
+                                    // 고가 == 상한가 찍었을 경우
+                                    if (json_price_high == uplmt_grid)
+                                    {
+                                        // 지정한 버퍼만큼 하락하면 매도
+                                        if ((rate + 100) < (json_rate_high + 100 - setting.sell_uplmt_buffer))
+                                        {
+                                            setting.mxTrCSPAT00600.call_request(shcode, quantity.ToString(), price.ToString(), "1", "[매도] 상한가 이탈 :: " + rate.ToString(), hname);
+                                        }
+                                    }
+                                }
+
+                                // 시가 기준 매도
+                                if (setting.sell_open_yn)
+                                {
+                                    double open_grid = Convert.ToDouble(mfTrading.GridAccount.Rows[iRow].Cells[Convert.ToInt32(mfTrading.mhAccount["시가"].GetValue())].Value);
+                                    double dnlmt_grid = Convert.ToDouble(mfTrading.GridAccount.Rows[iRow].Cells[Convert.ToInt32(mfTrading.mhAccount["하한가"].GetValue())].Value);
+
+                                    // 시가 == 하한가 경우는 무조건 매도
+                                    if (open_grid == dnlmt_grid)
+                                    {
+                                        setting.mxTrCSPAT00600.call_request(shcode, quantity.ToString(), price.ToString(), "1", "[매도] 시가 == 하한가 :: " + rate.ToString(), hname);
+                                    }
+                                    // 시가 기준 버퍼값 하락시 매도
+                                    else
+                                    {
+                                        if (price < Util.GetPricePercent(open_grid, -setting.sell_open_buffer))
+                                        {
+                                            setting.mxTrCSPAT00600.call_request(shcode, quantity.ToString(), price.ToString(), "1", "[매도] 현재가 < 당일시가 :: " + rate.ToString(), hname);
+                                        }
+                                    }
+                                }
+                            }
+
+                            #endregion
+
+                            #region 그리드에 잔고 변경 정보 반영
+
+                            // 수정될 종목이 있다고 flag 값 변경
+                            flagModify = true;
+
+                            // 루프 종료 후 삭제시 참고하기 위해 현재 정보를 row header 값에 세팅
+                            GridAccount.Rows[iRow].HeaderCell.Value = "U";
+
+                            // 그리드의 값 변경
+                            mfTrading.GridAccount.Rows[iRow].Cells[Convert.ToInt32(mfTrading.mhAccount["수량"].GetValue())].Value = Util.GetNumberFormat(quantity);
+                            mfTrading.GridAccount.Rows[iRow].Cells[Convert.ToInt32(mfTrading.mhAccount["현재가"].GetValue())].Value = Util.GetNumberFormat(price);
+                            mfTrading.GridAccount.Rows[iRow].Cells[Convert.ToInt32(mfTrading.mhAccount["평가금액"].GetValue())].Value = Util.GetNumberFormat(appamt);
+                            mfTrading.GridAccount.Rows[iRow].Cells[Convert.ToInt32(mfTrading.mhAccount["평가손익"].GetValue())].Value = Util.GetNumberFormat(dtsunik);
+                            mfTrading.GridAccount.Rows[iRow].Cells[Convert.ToInt32(mfTrading.mhAccount["수익율"].GetValue())].Value = Util.GetNumberFormat2(rate);
+                            mfTrading.GridAccount.Rows[iRow].Cells[Convert.ToInt32(mfTrading.mhAccount["평균단가"].GetValue())].Value = Util.GetNumberFormat(pamt);
+
+                            // 고가 == 상한가
+                            if (json_price_high == uplmt_grid)
+                            {
+                                GridAccount.Rows[iRow].DefaultCellStyle.Font = new System.Drawing.Font("굴림", 9, System.Drawing.FontStyle.Italic);
+
+                                // 현재가 == 상한가
+                                if (price == uplmt_grid)
+                                {
+                                    GridAccount.Rows[iRow].DefaultCellStyle.ForeColor = System.Drawing.Color.White;
+                                    GridAccount.Rows[iRow].DefaultCellStyle.BackColor = System.Drawing.Color.IndianRed;
+                                }
+                                // 상한가 이탈
+                                else
+                                {
+                                    // 평가손익 대비 row 색상 지정
+                                    if (Convert.ToDouble(dtsunik) > 0)
+                                    {
+                                        GridAccount.Rows[iRow].DefaultCellStyle.ForeColor = System.Drawing.Color.Red;
+                                    }
+                                    else
+                                    {
+                                        GridAccount.Rows[iRow].DefaultCellStyle.ForeColor = System.Drawing.Color.Blue;
+                                    }
+                                }
+                            }
+
+                            // 그리드 루프 빠져 나감
+                            break;
+
+                            #endregion
+                        }
+                    }
+                    */
+                    row[Convert.ToInt32(mhAccount["종목번호"].GetValue())] = shcode;
+                    row[Convert.ToInt32(mhAccount["종목명"].GetValue())] = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "종목명").Trim();
+                    row[Convert.ToInt32(mhAccount["평가손익"].GetValue())] = Util.GetNumberFormat(dtsunik);
+                    row[Convert.ToInt32(mhAccount["수익률"].GetValue())] = Util.GetNumberFormat2(axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "수익률(%)").Trim());
+                    row[Convert.ToInt32(mhAccount["매입가"].GetValue())] = Util.GetNumberFormat(axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "매입가").Trim());
+                    row[Convert.ToInt32(mhAccount["보유수량"].GetValue())] = Util.GetNumberFormat(axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "보유수량").Trim());
+                    row[Convert.ToInt32(mhAccount["현재가"].GetValue())] = Util.GetNumberFormat(axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "현재가").Trim());
+                    row[Convert.ToInt32(mhAccount["매입금액"].GetValue())] = Util.GetNumberFormat(axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "매입금액").Trim());
+                    row[Convert.ToInt32(mhAccount["평가금액"].GetValue())] = Util.GetNumberFormat(axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "평가금액").Trim());
+
+                    GridAccount.Rows.Add(row);
+
+                    int iRowLast = GridAccount.Rows.Count - 1;
+
+                    // 평가손익 대비 row 색상 지정
+                    if (Convert.ToDouble(dtsunik) > 0)
+                    {
+                        GridAccount.Rows[iRowLast].Cells[Convert.ToInt32(mhAccount["평가손익"].GetValue())].Style.ForeColor = System.Drawing.Color.Red;
+                        GridAccount.Rows[iRowLast].Cells[Convert.ToInt32(mhAccount["수익률"].GetValue())].Style.ForeColor = System.Drawing.Color.Red;
+                    }
+                    else
+                    {
+                        GridAccount.Rows[iRowLast].Cells[Convert.ToInt32(mhAccount["평가손익"].GetValue())].Style.ForeColor = System.Drawing.Color.Blue;
+                        GridAccount.Rows[iRowLast].Cells[Convert.ToInt32(mhAccount["수익률"].GetValue())].Style.ForeColor = System.Drawing.Color.Blue;
+                    }
+
+                    /*
+                    Logger(Log.조회, "{0} | 현재가:{1:N0} | 등락율:{2} | 거래량:{3:N0} ",
+                        axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "종목명").Trim(),
+                        Int32.Parse(axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "현재가").Trim()),
+                        axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "손익금액").Trim(),
+                        Int32.Parse(axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "손익율").Trim()));
+                     */
+                }
+            }
+            // OPT10074 : 일자별실현손익
+            else if (e.sRQName == "일자별실현손익")
+            {
+                String todaySonik = axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, 0, "당일매도손익").Trim();
+                TextDtsunik.Text = Util.GetNumberFormat(todaySonik);
+            }
+            // OPT10026 : 고저PER종목검색
+            else if (e.sRQName == "고저PER종목")
+            {
+                int nCnt = axKHOpenAPI.GetRepeatCnt(e.sTrCode, e.sRQName);
+
+                Logger(Log.일반, "고저PER종목 시작..!!");
+                for (int i = 0; i < nCnt; i++)
+                {
+                    Logger(Log.조회, "{0} | 현재가:{1:N0} | 등락율:{2} | 거래량:{3:N0} ",
+                        axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "종목명").Trim(),
+                        Int32.Parse(axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "현재가").Trim()),
+                        axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "등락율").Trim(),
+                        Int32.Parse(axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "현재거래량").Trim()));
+                }
+                Logger(Log.일반, "고저PER종목 끝..!!");
+            }
+            // OPT10016 : 신고저가요청검색
+            else if (e.sRQName == "신고저가요청")
+            {
+                int nCnt = axKHOpenAPI.GetRepeatCnt(e.sTrCode, e.sRQName);
+
+                Logger(Log.일반, "신고저가요청 시작..!! " + nCnt);
+                /*for (int i = 0; i < nCnt; i++)
+                {
+                    Logger(Log.조회, "{0} | 현재가:{1:N0} | 등락률:{2} | 거래량:{3:N0} ",
+                        axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "종목명").Trim(),
+                        Int32.Parse(axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "현재가").Trim()),
+                        axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "등락률").Trim(),
+                        Int32.Parse(axKHOpenAPI.CommGetData(e.sTrCode, "", e.sRQName, i, "현재거래량").Trim()));
+                }*/
+                Logger(Log.일반, "신고저가요청 끝..!!");
+            }
+            else
+            {
+                Logger(Log.일반, "모니..!! " + e.sRQName);
             }
         }
 
@@ -223,10 +614,16 @@ namespace KAutoTS
 
             if (axKHOpenAPI.GetConnectState() == 0)
             {
+                로그인ToolStripMenuItem.Enabled = true;
+                로그아웃ToolStripMenuItem.Enabled = false;
+
                 Text = TITLE_NAME + " " + TITLE_VERSION_CODE + " - 미연결";
             }
             else
             {
+                로그인ToolStripMenuItem.Enabled = false;
+                로그아웃ToolStripMenuItem.Enabled = true;
+
                 Text = TITLE_NAME + " " + TITLE_VERSION_CODE + " - 연결됨";
 
                 lbl아이디.Text = axKHOpenAPI.GetLoginInfo("USER_ID");
@@ -236,6 +633,9 @@ namespace KAutoTS
 
                 cbo계좌.Items.AddRange(arr계좌);
                 cbo계좌.SelectedIndex = 0;
+
+                Logger(Log.일반, "자동종목검색 초기화 시작..!!");
+                timerRealCondiInit.Start();
             }
         }
 
@@ -269,6 +669,18 @@ namespace KAutoTS
             {
 
             }
+            else if (e.sRQName == "계좌잔고평가")
+            {
+
+            }
+            else if (e.sRQName == "일자별실현손익")
+            {
+
+            }
+            else if (e.sRQName == "")
+            {
+
+            }
             else
             {
                 Logger(Log.조회, "===================================================");
@@ -290,6 +702,21 @@ namespace KAutoTS
                         Int32.Parse(axKHOpenAPI.GetCommRealData(e.sRealType, 13).Trim()));
             }
             
+        }
+
+        private void axKHOpenAPI_OnReceiveTrCondition(object sender, AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveTrConditionEvent e)
+        {
+            if (e.strCodeList != null && e.strCodeList.Length > 0)
+            {
+                Logger(Log.실시간, "실시간종목 반환 : " + e.strConditionName + " " + e.strCodeList);
+                axKHOpenAPI.SetRealReg("5201", e.strCodeList, "9001;302;10;12", "0");
+            }
+        }
+
+        private void axKHOpenAPI_OnReceiveRealCondition(object sender, AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveRealConditionEvent e)
+        {
+            Logger(Log.실시간, "실시간종목 반환2 : " + e.strConditionName + " " + e.sTrCode + " " + e.strType);
+
         }
 
         private void 현재가ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -529,7 +956,7 @@ namespace KAutoTS
         {
             if (flag)
             {
-                Logger(Log.일반, "자동거래 시작..!!");
+                Logger(Log.일반, "실시간 잔고 시작..!!");
 
                 timerRealAccount.Start();
 
@@ -538,7 +965,7 @@ namespace KAutoTS
             }
             else
             {
-                Logger(Log.일반, "자동거래 중지..!!");
+                Logger(Log.일반, "실시간 잔고 중지..!!");
 
                 timerRealAccount.Stop();
 
@@ -554,21 +981,87 @@ namespace KAutoTS
         /// <param name="e"></param>
         private void timerRealAccount_tick(object sender, EventArgs e)
         {
-            try
+            int ret = 0;
+
+            axKHOpenAPI.SetInputValue("계좌번호", cbo계좌.Items[0].ToString());
+            axKHOpenAPI.SetInputValue("비밀번호", "");
+            axKHOpenAPI.SetInputValue("상장폐지조회구분", "0");
+            axKHOpenAPI.SetInputValue("비밀번호입력매체구분", "00");
+            ret = axKHOpenAPI.CommRqData("실시간잔고", "OPW00004", 0, "5100");
+            if (ret == -201)
             {
-                axKHOpenAPI.SetInputValue("계좌번호", cbo계좌.Items[0].ToString());
-                axKHOpenAPI.SetInputValue("비밀번호", "");
-                axKHOpenAPI.SetInputValue("상장폐지조회구분", "0");
-                axKHOpenAPI.SetInputValue("비밀번호입력매체구분", "00");
-                int nRet = axKHOpenAPI.CommRqData("실시간잔고", "OPW00004", 0, GetScrNum());
-                scrNum++;
+                Logger(Log.에러, "실시간잔고 요청실패..!! " + ret);
+                timerRealAccount.Stop();
+                ButtonAutoRealAccountStart.Enabled = true;
+                ButtonAutoRealAccountStop.Enabled = false;
+                return;
             }
-            catch (Exception ex)
-            {
-                Logger(Log.에러, ex.Message);
-                Logger(Log.에러, ex.StackTrace);
-            }
+            
+            axKHOpenAPI.SetInputValue("계좌번호", cbo계좌.Items[0].ToString());
+            axKHOpenAPI.SetInputValue("비밀번호", "");
+            axKHOpenAPI.SetInputValue("비밀번호입력매체구분", "00");
+            axKHOpenAPI.SetInputValue("조회구분", "1");
+            axKHOpenAPI.CommRqData("계좌잔고평가", "opw00018", 0, "5101");
+
+            axKHOpenAPI.SetInputValue("계좌번호", cbo계좌.Items[0].ToString());
+            axKHOpenAPI.SetInputValue("시작일자", util_datetime.GetFormatNow("yyyyMMdd"));
+            axKHOpenAPI.SetInputValue("종료일자", util_datetime.GetFormatNow("yyyyMMdd"));
+            axKHOpenAPI.CommRqData("일자별실현손익", "OPT10074", 0, "5102");
         }	// end function
+
+        private int mRealCondiInitTick = 0;
+        /// <summary>
+        /// 실시간 종목 검색 초기화 타이머 구동 이벤트 처리
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void timerRealCondiInit_Tick(object sender, EventArgs e)
+        {
+            mRealCondiInitTick++;
+
+            // 1. 서버의 조건검색식을 임시 파일로 저장
+            int ret = axKHOpenAPI.GetConditionLoad();
+            if (mRealCondiInitTick > 1) 
+            {
+                // 2. 리스트를 가져옴
+                String list = axKHOpenAPI.GetConditionNameList();
+                Logger(Log.실시간, "조건검색식을 " + ret + " " + list);
+                if (list.Length > 0)
+                {
+                    string[] arr실시간조건 = list.Split(';');
+                    cboRealConditionL.Items.AddRange(arr실시간조건);
+                    cboRealConditionL.SelectedIndex = 0;
+                }
+
+                timerRealCondiInit.Stop();
+
+                ButtonAutoRealSearchStart.Enabled = true;
+                ButtonAutoRealSearchStop.Enabled = false;
+            }
+        }
+
+        /// <summary>
+        /// 실시간 종목 검색 타이머 구동 이벤트 처리
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void timerRealSearch_Tick(object sender, EventArgs e)
+        {
+            String name = cboRealConditionL.Items[cboRealConditionL.SelectedIndex].ToString();
+            String[] nameList = name.Split('^');
+            if (nameList != null && nameList.Length > 1) 
+            {
+                int ret = axKHOpenAPI.SendCondition("5200", nameList[1], Convert.ToInt32(nameList[0]), 1);
+                Logger(Log.실시간, "실시간 조건 검색식 리스트 결과:" + ret + " " + nameList[1]);
+            }
+            timerRealSearch.Stop();
+            cboRealConditionL.Enabled = false;
+        }
+
+        private void 설정ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mfSetting.Show();
+        }
 
         // 화면번호 생산
         private string GetScrNum()
@@ -590,6 +1083,60 @@ namespace KAutoTS
             }
 
             scrNum = 5000;
+        }
+
+        /// <summary>
+        /// 자동종목검색 시작 버튼 클릭 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ButtonAutoRealSearchStart_Click(object sender, EventArgs e)
+        {
+            autoUpdateRealSearch(true);
+        }
+
+        /// <summary>
+        /// 자동종목검색 중지 버튼 클릭 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ButtonAutoRealSearchStop_Click(object sender, EventArgs e)
+        {
+            autoUpdateRealSearch(false);
+        }
+
+        /// <summary>
+        /// 실시간 종목 시작/중지 지정
+        /// </summary>
+        /// <param name="flag"></param>
+        public void autoUpdateRealSearch(bool flag)
+        {
+            if (flag)
+            {
+                Logger(Log.일반, "자동종목검색 시작..!!");
+
+                timerRealSearch.Start();
+
+                ButtonAutoRealSearchStart.Enabled = false;
+                ButtonAutoRealSearchStop.Enabled = true;
+            }
+            else
+            {
+                Logger(Log.일반, "자동종목검색 중지..!!");
+
+                ButtonAutoRealSearchStart.Enabled = true;
+                ButtonAutoRealSearchStop.Enabled = false;
+
+                String name = cboRealConditionL.Items[cboRealConditionL.SelectedIndex].ToString();
+                String[] nameList = name.Split('^');
+                if (nameList != null && nameList.Length > 1)
+                {
+                    axKHOpenAPI.SendConditionStop("5200", nameList[1], Convert.ToInt32(nameList[0]));
+                    Logger(Log.실시간, "실시간 조건 검색식 리스트 중지 " + nameList[1]);
+                }
+                axKHOpenAPI.SetRealRemove("5201", "ALL");
+                cboRealConditionL.Enabled = true;
+            }
         }
     }
 }

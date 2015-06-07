@@ -27,23 +27,19 @@ namespace KAutoTS
 			}
 		}
 
-		/// <summary>
-		/// 천단위 변환된 숫자 리턴 
-		/// </summary>
-		/// <param name="szNumber"></param>
-		/// <returns></returns>
-		public static string GetNumberFormat2(string szNumber)
-		{
-			if (isNaN(szNumber))
-			{
-				return String.Format("{0:#,##0.00}", Double.Parse(szNumber.Replace(",", "")));
-			}
-			else
-			{
-				return "0";
-			}
-		}
-
+        public static string GetNumberFormat2(string szNumber)
+        {
+            if (isNaN(szNumber))
+            {
+                double num = Double.Parse(szNumber.Replace(",", ""));
+                num /= 10000;
+                return String.Format("{0:#,##0.00%}", num);
+            }
+            else
+            {
+                return "0";
+            }
+        }
 
 		/// <summary>
 		/// 천단위 변환된 숫자 리턴
