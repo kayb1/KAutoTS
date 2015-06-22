@@ -462,8 +462,8 @@
             this.axKHOpenAPI.OnReceiveMsg += new AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveMsgEventHandler(this.axKHOpenAPI_OnReceiveMsg);
             this.axKHOpenAPI.OnReceiveChejanData += new AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveChejanDataEventHandler(this.axKHOpenAPI_OnReceiveChejanData);
             this.axKHOpenAPI.OnEventConnect += new AxKHOpenAPILib._DKHOpenAPIEvents_OnEventConnectEventHandler(this.axKHOpenAPI_OnEventConnect);
-            this.axKHOpenAPI.OnReceiveTrCondition += new AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveTrConditionEventHandler(this.axKHOpenAPI_OnReceiveTrCondition);
             this.axKHOpenAPI.OnReceiveRealCondition += new AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveRealConditionEventHandler(this.axKHOpenAPI_OnReceiveRealCondition);
+            this.axKHOpenAPI.OnReceiveTrCondition += new AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveTrConditionEventHandler(this.axKHOpenAPI_OnReceiveTrCondition);
             // 
             // groupBox5
             // 
@@ -507,7 +507,7 @@
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.08046F));
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.08046F));
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 9F));
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 54F));
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 61F));
             this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 132F));
             this.tableLayoutPanel7.Controls.Add(this.label12, 0, 0);
             this.tableLayoutPanel7.Controls.Add(this.Text100, 0, 1);
@@ -540,7 +540,7 @@
             this.label12.Location = new System.Drawing.Point(0, 0);
             this.label12.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(73, 20);
+            this.label12.Size = new System.Drawing.Size(72, 20);
             this.label12.TabIndex = 109;
             this.label12.Text = "주문가능";
             this.label12.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -552,7 +552,7 @@
             this.Text100.Margin = new System.Windows.Forms.Padding(0);
             this.Text100.Name = "Text100";
             this.Text100.ReadOnly = true;
-            this.Text100.Size = new System.Drawing.Size(73, 21);
+            this.Text100.Size = new System.Drawing.Size(72, 21);
             this.Text100.TabIndex = 112;
             this.Text100.Text = "0";
             this.Text100.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -560,10 +560,10 @@
             // label21
             // 
             this.label21.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label21.Location = new System.Drawing.Point(73, 0);
+            this.label21.Location = new System.Drawing.Point(72, 0);
             this.label21.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(73, 20);
+            this.label21.Size = new System.Drawing.Size(72, 20);
             this.label21.TabIndex = 43;
             this.label21.Text = "예수금-D2";
             this.label21.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -571,10 +571,10 @@
             // label16
             // 
             this.label16.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label16.Location = new System.Drawing.Point(146, 0);
+            this.label16.Location = new System.Drawing.Point(144, 0);
             this.label16.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(73, 20);
+            this.label16.Size = new System.Drawing.Size(72, 20);
             this.label16.TabIndex = 33;
             this.label16.Text = "총매입";
             this.label16.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -582,11 +582,11 @@
             // TextSunamt1
             // 
             this.TextSunamt1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextSunamt1.Location = new System.Drawing.Point(73, 22);
+            this.TextSunamt1.Location = new System.Drawing.Point(72, 22);
             this.TextSunamt1.Margin = new System.Windows.Forms.Padding(0);
             this.TextSunamt1.Name = "TextSunamt1";
             this.TextSunamt1.ReadOnly = true;
-            this.TextSunamt1.Size = new System.Drawing.Size(73, 21);
+            this.TextSunamt1.Size = new System.Drawing.Size(72, 21);
             this.TextSunamt1.TabIndex = 44;
             this.TextSunamt1.Text = "0";
             this.TextSunamt1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -594,11 +594,11 @@
             // TextMamt
             // 
             this.TextMamt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextMamt.Location = new System.Drawing.Point(146, 22);
+            this.TextMamt.Location = new System.Drawing.Point(144, 22);
             this.TextMamt.Margin = new System.Windows.Forms.Padding(0);
             this.TextMamt.Name = "TextMamt";
             this.TextMamt.ReadOnly = true;
-            this.TextMamt.Size = new System.Drawing.Size(73, 21);
+            this.TextMamt.Size = new System.Drawing.Size(72, 21);
             this.TextMamt.TabIndex = 34;
             this.TextMamt.Text = "0";
             this.TextMamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -606,10 +606,10 @@
             // label18
             // 
             this.label18.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label18.Location = new System.Drawing.Point(219, 0);
+            this.label18.Location = new System.Drawing.Point(216, 0);
             this.label18.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(73, 20);
+            this.label18.Size = new System.Drawing.Size(72, 20);
             this.label18.TabIndex = 37;
             this.label18.Text = "총평가";
             this.label18.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -617,10 +617,10 @@
             // label19
             // 
             this.label19.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label19.Location = new System.Drawing.Point(292, 0);
+            this.label19.Location = new System.Drawing.Point(288, 0);
             this.label19.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(73, 20);
+            this.label19.Size = new System.Drawing.Size(72, 20);
             this.label19.TabIndex = 39;
             this.label19.Text = "총손익";
             this.label19.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -628,11 +628,11 @@
             // TextSunamt
             // 
             this.TextSunamt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextSunamt.Location = new System.Drawing.Point(219, 22);
+            this.TextSunamt.Location = new System.Drawing.Point(216, 22);
             this.TextSunamt.Margin = new System.Windows.Forms.Padding(0);
             this.TextSunamt.Name = "TextSunamt";
             this.TextSunamt.ReadOnly = true;
-            this.TextSunamt.Size = new System.Drawing.Size(73, 21);
+            this.TextSunamt.Size = new System.Drawing.Size(72, 21);
             this.TextSunamt.TabIndex = 38;
             this.TextSunamt.Text = "0";
             this.TextSunamt.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -641,11 +641,11 @@
             // 
             this.TextTdtsunik.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TextTdtsunik.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TextTdtsunik.Location = new System.Drawing.Point(292, 22);
+            this.TextTdtsunik.Location = new System.Drawing.Point(288, 22);
             this.TextTdtsunik.Margin = new System.Windows.Forms.Padding(0);
             this.TextTdtsunik.Name = "TextTdtsunik";
             this.TextTdtsunik.ReadOnly = true;
-            this.TextTdtsunik.Size = new System.Drawing.Size(73, 21);
+            this.TextTdtsunik.Size = new System.Drawing.Size(72, 21);
             this.TextTdtsunik.TabIndex = 40;
             this.TextTdtsunik.Text = "0";
             this.TextTdtsunik.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -653,10 +653,10 @@
             // label20
             // 
             this.label20.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label20.Location = new System.Drawing.Point(365, 0);
+            this.label20.Location = new System.Drawing.Point(360, 0);
             this.label20.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(71, 20);
+            this.label20.Size = new System.Drawing.Size(70, 20);
             this.label20.TabIndex = 41;
             this.label20.Text = "총수익률";
             this.label20.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -664,10 +664,10 @@
             // label17
             // 
             this.label17.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label17.Location = new System.Drawing.Point(436, 0);
+            this.label17.Location = new System.Drawing.Point(430, 0);
             this.label17.Margin = new System.Windows.Forms.Padding(0, 0, 0, 2);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(71, 20);
+            this.label17.Size = new System.Drawing.Size(70, 20);
             this.label17.TabIndex = 35;
             this.label17.Text = "실현손익";
             this.label17.TextAlign = System.Drawing.ContentAlignment.BottomRight;
@@ -675,11 +675,11 @@
             // TextTdtsunikP
             // 
             this.TextTdtsunikP.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextTdtsunikP.Location = new System.Drawing.Point(365, 22);
+            this.TextTdtsunikP.Location = new System.Drawing.Point(360, 22);
             this.TextTdtsunikP.Margin = new System.Windows.Forms.Padding(0);
             this.TextTdtsunikP.Name = "TextTdtsunikP";
             this.TextTdtsunikP.ReadOnly = true;
-            this.TextTdtsunikP.Size = new System.Drawing.Size(71, 21);
+            this.TextTdtsunikP.Size = new System.Drawing.Size(70, 21);
             this.TextTdtsunikP.TabIndex = 42;
             this.TextTdtsunikP.Text = "0";
             this.TextTdtsunikP.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -687,11 +687,11 @@
             // TextDtsunik
             // 
             this.TextDtsunik.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextDtsunik.Location = new System.Drawing.Point(436, 22);
+            this.TextDtsunik.Location = new System.Drawing.Point(430, 22);
             this.TextDtsunik.Margin = new System.Windows.Forms.Padding(0);
             this.TextDtsunik.Name = "TextDtsunik";
             this.TextDtsunik.ReadOnly = true;
-            this.TextDtsunik.Size = new System.Drawing.Size(71, 21);
+            this.TextDtsunik.Size = new System.Drawing.Size(70, 21);
             this.TextDtsunik.TabIndex = 36;
             this.TextDtsunik.Text = "0";
             this.TextDtsunik.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
@@ -700,7 +700,7 @@
             // 
             this.CheckSellAll.AutoSize = true;
             this.CheckSellAll.CheckAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.CheckSellAll.Location = new System.Drawing.Point(516, 0);
+            this.CheckSellAll.Location = new System.Drawing.Point(509, 0);
             this.CheckSellAll.Margin = new System.Windows.Forms.Padding(0);
             this.CheckSellAll.Name = "CheckSellAll";
             this.tableLayoutPanel7.SetRowSpan(this.CheckSellAll, 2);

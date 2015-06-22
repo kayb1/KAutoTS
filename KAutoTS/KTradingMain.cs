@@ -40,6 +40,9 @@ namespace KAutoTS
         /// <summary>당일 같은 종목 재매수 세팅시 활용 {"종목코드"}</summary>
         public JsonObjectCollection mRebuyJson;
 
+        /// <summary>실시간 조건검색식 활용 {"종목코드"}</summary>
+        public JsonObjectCollection mRealJson;
+
         private FormSetting mfSetting;
 
         public KTradingMain()
@@ -179,6 +182,8 @@ namespace KAutoTS
             }
 
             GridRealCondition.SelectionMode = DataGridViewSelectionMode.FullRowSelect;		// 행단위 선택
+
+            mRealJson = new JsonObjectCollection();
         }
 
         // 로그를 출력합니다.
@@ -690,9 +695,6 @@ namespace KAutoTS
 
         private void axKHOpenAPI_OnReceiveRealData(object sender, AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveRealDataEvent e)
         {
-            Logger(Log.실시간, "종목코드 : {0} | RealType : {1} | RealData : {2}",
-                e.sRealKey, e.sRealType, e.sRealData);
-
             if( e.sRealType == "주식시세" )
             {
                 Logger(Log.실시간, "종목코드 : {0} | 현재가 : {1:C} | 등락율 : {2} | 누적거래량 : {3:N0} ",
@@ -700,23 +702,120 @@ namespace KAutoTS
                         Int32.Parse(axKHOpenAPI.GetCommRealData(e.sRealType, 10).Trim()),
                         axKHOpenAPI.GetCommRealData(e.sRealType, 12).Trim(),
                         Int32.Parse(axKHOpenAPI.GetCommRealData(e.sRealType, 13).Trim()));
+            } else
+            {
+                //Logger(Log.실시간, "종목코드 : {0} | RealType : {1} | RealData : {2}",
+                //e.sRealKey, e.sRealType, e.sRealData);
+
+                Logger(Log.실시간, "종목코드 : {0} | 현재가 : {1} | 등락율 : {2} | 종목명 : {3} ",
+                        e.sRealKey,
+                        Int32.Parse(axKHOpenAPI.GetCommRealData(e.sRealType, 10).Trim()),
+                        axKHOpenAPI.GetCommRealData(e.sRealType, 12).Trim(),
+                        axKHOpenAPI.GetMasterCodeName(e.sRealKey).Trim());
+
+                for (int iRow = GridRealCondition.Rows.Count - 1; iRow >= 0; iRow--)
+                {
+                    if (GridRealCondition.Rows[iRow].Cells[0].Value.ToString() == e.sRealKey)
+                    {
+                        String price = Util.GetNumberFormat(axKHOpenAPI.GetCommRealData(e.sRealType, 10));
+                        String updown = axKHOpenAPI.GetCommRealData(e.sRealType, 12);
+                        GridRealCondition.Rows[iRow].Cells[1].Value = axKHOpenAPI.GetMasterCodeName(e.sRealKey).Trim();
+                        GridRealCondition.Rows[iRow].Cells[2].Value = price;
+                        GridRealCondition.Rows[iRow].Cells[3].Value = updown + "%";
+                        if (GridRealCondition.Rows[iRow].Cells[4].Value.ToString() == "0")
+                        {
+                            GridRealCondition.Rows[iRow].Cells[4].Value = price;
+                        }
+                        if (GridRealCondition.Rows[iRow].Cells[5].Value.ToString() == "0")
+                        {
+                            GridRealCondition.Rows[iRow].Cells[5].Value = updown;
+                        }
+                        
+                        break;
+                    }
+                }
             }
             
         }
-
+        
         private void axKHOpenAPI_OnReceiveTrCondition(object sender, AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveTrConditionEvent e)
         {
             if (e.strCodeList != null && e.strCodeList.Length > 0)
             {
                 Logger(Log.실시간, "실시간종목 반환 : " + e.strConditionName + " " + e.strCodeList);
-                axKHOpenAPI.SetRealReg("5201", e.strCodeList, "9001;302;10;12", "0");
+
+                String[] nameList = e.strCodeList.Split(';');
+                if (nameList != null && nameList.Length > 1)
+                {
+                    for (int i = 0; i < nameList.Length; i++)
+                    {
+                        if (nameList[i].Length > 0 && mRealJson[nameList[i]] == null) 
+                        {
+                            mRealJson.Add(new JsonStringValue(nameList[i]));
+
+                            string[] row = new string[GridRealCondition.ColumnCount];
+                            for (int j = 0; j < row.Length; j++)
+                            {
+                                row[j] = "0";
+                            }
+                            row[0] = nameList[i];
+                            row[1] = axKHOpenAPI.GetMasterCodeName(nameList[i]).Trim();
+                            GridRealCondition.Rows.Add(row);
+                        }
+                    }
+                    axKHOpenAPI.SetRealReg("5201", e.strCodeList, "9001;302;10;12", "0");
+                }
             }
         }
 
         private void axKHOpenAPI_OnReceiveRealCondition(object sender, AxKHOpenAPILib._DKHOpenAPIEvents_OnReceiveRealConditionEvent e)
         {
-            Logger(Log.실시간, "실시간종목 반환2 : " + e.strConditionName + " " + e.sTrCode + " " + e.strType);
+            if (mRealJson[e.sTrCode] == null && e.strType == "I")
+            {
+                Logger(Log.실시간, "실시간종목 편입 : " + e.strConditionName + " " + e.sTrCode);
+                mRealJson.Add(new JsonStringValue(e.sTrCode));
 
+                bool isEixst = false;
+                for (int iRow = GridRealCondition.Rows.Count - 1; iRow >= 0; iRow--)
+                {
+                    if (GridRealCondition.Rows[iRow].Cells[0].Value.ToString() == e.sTrCode)
+                    {
+                        isEixst = true;
+                        break;
+                    }
+
+                }
+
+                if (!isEixst)
+                {
+                    string[] row = new string[GridRealCondition.ColumnCount];
+                    for (int j = 0; j < row.Length; j++)
+                    {
+                        row[j] = "0";
+                    }
+                    row[0] = e.sTrCode;
+                    row[1] = axKHOpenAPI.GetMasterCodeName(e.sTrCode).Trim();
+                    GridRealCondition.Rows.Add(row);
+
+                    axKHOpenAPI.SetRealReg("5201", e.sTrCode, "9001;302;10;12", "1");
+                }
+            } else if (mRealJson[e.sTrCode] != null && e.strType == "D")
+            {
+                Logger(Log.실시간, "실시간종목 이탈 : " + e.strConditionName + " " + e.sTrCode);
+                mRealJson.Remove(mRealJson[e.sTrCode]);
+
+                for (int iRow = GridRealCondition.Rows.Count - 1; iRow >= 0; iRow--)
+                {
+                    if (GridRealCondition.Rows[iRow].Cells[0].Value.ToString() == e.sTrCode)
+                    {
+                        GridRealCondition.Rows.Remove(GridRealCondition.Rows[iRow]);
+                        break;
+                    }
+
+                }
+
+                axKHOpenAPI.SetRealRemove("5201", e.sTrCode);
+            }
         }
 
         private void 현재가ToolStripMenuItem_Click(object sender, EventArgs e)
